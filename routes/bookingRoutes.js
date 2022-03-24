@@ -15,5 +15,5 @@ router
   .get(bookingController.getBooking)
   .patch(bookingController.updateBooking)
   .delete(bookingController.deleteBooking);
-
+router.route("/sendmail").post(bookingController.sendmail);
 module.exports = router;

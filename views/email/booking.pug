@@ -1,0 +1,10 @@
+extends baseEmail
+
+block content
+  p Hi #{firstName},
+    p Booking confirmation
+  
+    p Doctor : #{doctorName}
+    p speciality : #{doctorSpeciality}
+    p Patient: #{userName}
+    p Appointment Date & time : #{appointmentTime}
