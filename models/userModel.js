@@ -16,8 +16,7 @@ const userSchema = new mongoose.Schema({
   },
   mobile: {
     type: Number,
-    unique: true,
-    validate: [validator.isMobilePhone, "Please provide a valid mobile number"]
+    unique: true
   },
   photo: String,
   role: {

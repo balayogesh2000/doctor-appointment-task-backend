@@ -31,32 +31,59 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-    passwordChangedAt: req.body.passwordChangedAt,
-    role: req.body.role
-  });
-  createSendToken(newUser, 201, res);
+  if (req.body.mobile) {
+    const newUser = await User.create({
+      name: req.body.name,
+      mobile: req.body.mobile,
+      password: req.body.password,
+      passwordConfirm: req.body.passwordConfirm,
+      passwordChangedAt: req.body.passwordChangedAt,
+      role: req.body.role
+    });
+    createSendToken(newUser, 201, res);
+  } else {
+    const newUser = await User.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+      passwordConfirm: req.body.passwordConfirm,
+      passwordChangedAt: req.body.passwordChangedAt,
+      role: req.body.role
+    });
+    createSendToken(newUser, 201, res);
+  }
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, mobile } = req.body;
 
-  // 1) Check if email and password received from client
-  if (!email || !password) {
-    return next(new AppError("Please provide email and password", 400));
-  }
+  if (mobile) {
+    // 1) Check if email and password received from client
+    if (!mobile || !password) {
+      return next(new AppError("Please provide mobile and password", 400));
+    }
 
-  // 2) Check if user exists and password is correct
-  const user = await User.findOne({ email }).select("+password");
-  if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError("Incorrect Email or password", 401));
+    // 2) Check if user exists and password is correct
+    const user = await User.findOne({ mobile }).select("+password");
+    if (!user || !(await user.correctPassword(password, user.password))) {
+      return next(new AppError("Incorrect Email or password", 401));
+    }
+    // 3) Sign in and send jwt to client
+    createSendToken(user, 200, res);
+  } else {
+    // 1) Check if email and password received from client
+    if (!email || !password) {
+      return next(new AppError("Please provide email and password", 400));
+    }
+
+    // 2) Check if user exists and password is correct
+    const user = await User.findOne({ email }).select("+password");
+    if (!user || !(await user.correctPassword(password, user.password))) {
+      return next(new AppError("Incorrect Email or password", 401));
+    }
+    // 3) Sign in and send jwt to client
+    createSendToken(user, 200, res);
   }
-  // 3) Sign in and send jwt to client
-  createSendToken(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
