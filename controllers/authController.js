@@ -32,6 +32,8 @@ const createSendToken = (user, statusCode, res) => {
 
 exports.signup = catchAsync(async (req, res, next) => {
   if (req.body.mobile) {
+    const user = await User.findOne({ mobile: req.body.mobile });
+    if (user) return next(new AppError("mobile number already exists", 400));
     const newUser = await User.create({
       name: req.body.name,
       mobile: req.body.mobile,
@@ -42,6 +44,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     });
     createSendToken(newUser, 201, res);
   } else {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) return next(new AppError("email already exists", 400));
     const newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
