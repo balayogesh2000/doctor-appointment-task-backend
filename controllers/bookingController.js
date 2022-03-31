@@ -19,15 +19,7 @@ exports.getAllBooking = catchAsync(async (req, res, next) => {
 exports.getBooking = factory.getOne(Booking);
 exports.createBooking = factory.createOne(Booking);
 exports.updateBooking = factory.updateOne(Booking);
-exports.deleteBooking = catchAsync(async (req, res, next) => {
-  const params = {};
-  if (req.query.user) params.user = req.query.user;
-  const deleted = await Booking.deleteMany(params);
-  res.status(200).json({
-    status: "success",
-    deleted
-  });
-});
+exports.deleteBooking = factory.deleteOne(Booking);
 
 exports.sendmail = catchAsync(async (req, res, next) => {
   let mailRes;

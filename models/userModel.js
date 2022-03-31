@@ -16,10 +16,9 @@ const userSchema = new mongoose.Schema({
   mobile: {
     type: Number
   },
-  photo: String,
   role: {
     type: String,
-    enum: ["user", "admin"],
+    enum: ["user", "admin", "doctor"],
     default: "user"
   },
   password: {
@@ -45,6 +44,12 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
     select: false
+  },
+  speciality: {
+    type: String
+  },
+  fee: {
+    type: Number
   }
 });
 

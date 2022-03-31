@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const bookingSchema = new mongoose.Schema({
   doctor: {
     type: mongoose.Schema.ObjectId,
-    ref: "Doctors",
+    ref: "User",
     required: [true, "Booking must belong to a doctor"]
   },
   user: {
